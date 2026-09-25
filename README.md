@@ -119,7 +119,7 @@ python -m http.server 8080
 
 ## History
 
-Pocket Camera was originally built in **2021** — by hand, without any LLMs — and was hosted at **[pocket-camera.app](https://pocket-camera.app)**. Over the following years the project fell into oblivion and the domain went away.
+Pocket Camera was originally built in **2021** — by hand, without any LLMs — and was hosted at **pocket-camera.app**. Over the following years the project fell into oblivion and the domain went away.
 
 In **2026** it was revived and republished: the code was reworked to run on a GitHub Pages project page (relative paths, `.nojekyll`) and put back online here. The revival was done with [OpenCode](https://opencode.ai).
 
