@@ -1,0 +1,855 @@
+:root {
+  --padding: 0;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  background-color: #000;
+  overscroll-behavior: contain;
+  touch-action: none;
+}
+body {
+  font-family: Futura, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-size: 18px;
+}
+body.desktop {
+  max-width: 66.666666666vh;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+* {
+  &,
+  &:before,
+  &:after {
+    box-sizing: border-box;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+    -webkit-focus-ring-color: rgba(255, 255, 255, 0) !important;
+    outline: none !important;
+  }
+}
+
+button {
+  display: block;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.button {
+  background-color: $plum;
+  border: none;
+  border-radius: 2px;
+  color: $white;
+  display: block;
+  line-height: 38px;
+  font-weight: bold;
+  padding: 0 16px;
+}
+
+.install {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px 20px;
+  background-color: $white;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+  display: none;
+  z-index: 99;
+  &--active {
+    display: block;
+    display: flex;
+  }
+  img {
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+  }
+  .dismiss-prompt {
+    margin-left: auto;
+    @include mdi('close', 48px);
+    &:before {
+      font-size: 18px;
+    }
+  }
+}
+
+.scaffold {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.view {
+  padding: 20px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+@keyframes tap {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0.1;
+  }
+}
+.view-camera {
+  $angle: 25deg;
+  padding: 0;
+  overflow: hidden;
+  background-color: #000;
+  .camera-page {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 72px;
+    overflow: hidden;
+    &:before,
+    &:after {
+      z-index: 2;
+      display: block;
+      content: '';
+      position: absolute;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      top: -2px;
+      left: -2px;
+      pointer-events: none;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 74px;
+    }
+    &:before {
+      background-image: url(images/texture.png);
+      background-size: 200px 200px;
+      mix-blend-mode: luminosity;
+    }
+    &:after {
+      box-shadow: inset 0 0 3px #000, inset 0 0 3px #000, inset 0 0 6px #000, inset 0 0 6px #000, inset 0 0 18px #fff,
+        inset 0 0 18px #fff;
+      // background-image: linear-gradient(
+      //   -#{$angle},
+      //   rgba(shade($lightgray, 30), 0.5) 0,
+      //   rgba(shade($lightgray, 20), 0.5) 80px,
+      //   transparent 100px
+      // );
+      z-index: 4;
+    }
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: $lightgray;
+    .screen-wrapper {
+      z-index: 5;
+      &:before {
+        display: block;
+        position: absolute;
+        content: '';
+        width: calc(100% + calc(var(--padding) * 1.25));
+        height: calc(100% + calc(var(--padding) * 1.25));
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: $darkgray;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 24px;
+        box-shadow: 0 0 0 1.5px shade($lightgray, 60), 0 -1px 0 1.5px shade($lightgray, 30),
+          0 1px 0 2px tint($lightgray, 30), inset 0 1px 0 tint($darkgray, 30);
+      }
+      &:after {
+        display: block;
+        content: '';
+        position: absolute;
+        width: calc(100% + 4px);
+        left: -2px;
+        height: calc(calc(var(--padding) * 0.25) - 4px);
+        border-top: 3px solid $pink;
+        border-bottom: 3px solid $blue;
+        bottom: calc(100% + calc(var(--padding) * 0.2));
+      }
+      > * {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+      video {
+        display: block;
+        position: absolute;
+        z-index: -999;
+        height: 1px;
+        width: 1px;
+        top: 50%;
+        left: 50%;
+      }
+      .canvas-wrapper {
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+        -ms-interpolation-mode: nearest-neighbor;
+        -moz-image-rendering: pixelated;
+        image-rendering: pixelated;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #fff;
+        transition: all $transition;
+        canvas {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          transition: opacity $transition;
+          object-fit: contain;
+        }
+      }
+      .camera-wrapper {
+        background-color: $darkgray;
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          box-shadow: 0 0 0 1.5px shade($darkgray, 80), inset 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 2px #000,
+            inset 0 60px 120px rgba(0, 0, 0, 0.1);
+        }
+        canvas {
+          border-radius: 2px;
+        }
+      }
+      .preview-wrapper {
+        pointer-events: none;
+        opacity: 0;
+        transition: all $transition;
+        z-index: 2;
+        transition: all 0.3s ease-out;
+        &:before,
+        &:after {
+          display: block;
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          transition: all $transition;
+        }
+        &:before {
+          width: 200vw;
+          height: 200vh;
+          background-color: rgba(0, 0, 0, 0.5);
+          transform: translate(-50%, -50%);
+        }
+        &:after {
+          box-shadow: 0 0 0 1px #000, 0 0 0 1px rgba(0, 0, 0, 0.4);
+        }
+        .preview-buttons {
+          position: absolute;
+          z-index: 2;
+          width: 100%;
+          bottom: 0;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+          .mdi {
+            margin: 8px;
+            &:before {
+              font-size: 24px;
+              line-height: 1;
+              color: $white;
+            }
+          }
+          .mdi:first-child {
+            margin-right: auto;
+          }
+        }
+      }
+      .video-wrapper,
+      .scale-wrapper,
+      .composite-wrapper {
+        display: none !important;
+      }
+    }
+    .controls-wrapper {
+      z-index: 4;
+      $dpad-size: 110px;
+      $circle-padding: 10px;
+      $arrow-offset: 16px;
+      $bar-width: 32px;
+      $shell-relief-down: inset 0 1px 0 0 shade($lightgray, 20), inset 0 -1px 0 0 tint($lightgray, 30);
+      $shell-relief-up: 0 1px 0 shade($lightgray, 20), 0 -1px 0 tint($lightgray, 30);
+      $shell-gap: 0 0 0 1.5px #000, 0 -1px 0 1.5px shade($lightgray, 50), 0 1px 0 1.5px tint($lightgray, 50);
+      $shell-inset: inset 0 10px 10px rgba(shade($lightgray, 10), 0.67),
+        inset 0 -10px 10px rgba(tint($lightgray, 20), 0.67);
+      $button-shadow-raised: 0 2px 2px rgba(0, 0, 0, 0.06), 0 4px 2px rgba(0, 0, 0, 0.06), 0 8px 4px rgba(0, 0, 0, 0.06),
+        0 16px 8px rgba(0, 0, 0, 0.08), 0 32px 16px rgba(0, 0, 0, 0.08), 0 64px 32px rgba(0, 0, 0, 0.08);
+      $button-shadow-semi: 0 0 2px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.06), 0 3px 4px rgba(0, 0, 0, 0.06),
+        0 5px 8px rgba(0, 0, 0, 0.08), 0 11px 16px rgba(0, 0, 0, 0.08), 0 21px 32px rgba(0, 0, 0, 0.08);
+      $button-shadow-pressed: 0 0 0 rgba(0, 0, 0, 0.06), 0 0 0 rgba(0, 0, 0, 0.06), 0 0 0 rgba(0, 0, 0, 0.06),
+        0 0 0 rgba(0, 0, 0, 0.08), 0 0 0 rgba(0, 0, 0, 0.08), 0 0 0 rgba(0, 0, 0, 0.08);
+      $button-shadow-pressed: 0 1px 2px rgba(0, 0, 0, 0.06), 0 2px 2px rgba(0, 0, 0, 0.06),
+        0 4px 4px rgba(0, 0, 0, 0.06), 0 8px 8px rgba(0, 0, 0, 0.08), 0 0 0 rgba(0, 0, 0, 0.08),
+        0 0 0 rgba(0, 0, 0, 0.08);
+      $button-shadow-extra: 0 3px 2px rgba(0, 0, 0, 0.06), 0 6px 2px rgba(0, 0, 0, 0.06), 0 12px 4px rgba(0, 0, 0, 0.06),
+        0 24px 8px rgba(0, 0, 0, 0.08), 0 48px 16px rgba(0, 0, 0, 0.08), 0 64px 32px rgba(0, 0, 0, 0.08);
+      $dpad-shadow-inset-raised: inset 0 0 4px tint($black, 20), inset 0 2px 1px 2px tint($black, 30),
+        inset 0 -1px 2px 2px shade($black, 80);
+      $dpad-shadow-inset-pressed-u: inset 0 0 4px tint($black, 20), inset 0 0 1px 2px tint($black, 30),
+        inset 0 -3px 2px 2px shade($black, 80);
+      $dpad-shadow-inset-pressed-r: inset 0 0 4px tint($black, 20), inset 1px 1px 1px 2px tint($black, 30),
+        inset 1px -2px 2px 2px shade($black, 80);
+      $dpad-shadow-inset-pressed-d: inset 0 0 4px tint($black, 20), inset 0 3px 1px 2px tint($black, 30),
+        inset 0 0 2px 2px shade($black, 80);
+      $dpad-shadow-inset-pressed-l: inset 0 0 4px tint($black, 20), inset -1px 1px 1px 2px tint($black, 30),
+        inset -1px -2px 2px 2px shade($black, 80);
+
+      $dpad-shadow-fix-top-raised: -#{$bar-width} 0 4px tint($black, 20), -#{$bar-width} 2px 1px 2px tint($black, 30),
+        $bar-width 0 4px tint($black, 20), $bar-width 2px 1px 2px tint($black, 30);
+
+      $dpad-shadow-fix-top-pressed-u: -#{$bar-width} 0 4px tint($black, 20), -#{$bar-width} 0 1px 2px tint($black, 30),
+        $bar-width 0 4px tint($black, 20), $bar-width 0 1px 2px tint($black, 30);
+      $dpad-shadow-fix-top-pressed-r: -#{$bar-width} 0 4px tint($black, 20),
+        -#{($bar-width - 1)} 1px 1px 2px tint($black, 30), $bar-width 0 4px tint($black, 20),
+        ($bar-width + 1) 1px 1px 2px tint($black, 30);
+      $dpad-shadow-fix-top-pressed-d: -#{$bar-width} 0 4px tint($black, 20), -#{$bar-width} 3px 1px 2px tint($black, 30),
+        $bar-width 0 4px tint($black, 20), $bar-width 3px 1px 2px tint($black, 30);
+      $dpad-shadow-fix-top-pressed-l: -#{$bar-width} 0 4px tint($black, 20),
+        -#{($bar-width + 1)} 1px 1px 2px tint($black, 30), $bar-width 0 4px tint($black, 20),
+        ($bar-width - 1) 1px 1px 2px tint($black, 30);
+
+      $dpad-shadow-fix-bottom-raised: -#{$bar-width} 0 4px tint($black, 20), -#{$bar-width} 2px 1px 2px tint($black, 30),
+        -#{$bar-width} -1px 2px 2px shade($black, 80), $bar-width 0 4px tint($black, 20),
+        $bar-width 2px 1px 2px tint($black, 30), $bar-width -1px 2px 2px shade($black, 80);
+
+      $dpad-shadow-fix-bottom-pressed-u: -#{$bar-width} -2px 4px tint($black, 20),
+        -#{$bar-width} 0 1px 2px tint($black, 30), -#{$bar-width} -3px 2px 2px shade($black, 80),
+        $bar-width -2px 4px tint($black, 20), $bar-width 0 1px 2px tint($black, 30),
+        $bar-width -3px 2px 2px shade($black, 80);
+
+      $dpad-shadow-fix-bottom-pressed-r: -#{($bar-width - 1)} 0 4px tint($black, 20),
+        -#{($bar-width - 1)} 1px 1px 2px tint($black, 30), -#{($bar-width - 1)} -2px 2px 2px shade($black, 80),
+        ($bar-width + 1) 0 4px tint($black, 20), ($bar-width + 1) 1px 1px 2px tint($black, 30),
+        ($bar-width + 1) -2px 2px 2px shade($black, 80);
+
+      $dpad-shadow-fix-bottom-pressed-d: -#{$bar-width} 1px 4px tint($black, 20),
+        -#{$bar-width} 3px 1px 2px tint($black, 30), -#{$bar-width} 0 2px 2px shade($black, 80),
+        $bar-width 1px 4px tint($black, 20), $bar-width 3px 1px 2px tint($black, 30),
+        $bar-width 0 2px 2px shade($black, 80);
+
+      $dpad-shadow-fix-bottom-pressed-l: -#{($bar-width + 1)} 0 4px tint($black, 20),
+        -#{($bar-width + 1)} 1px 1px 2px tint($black, 30), -#{($bar-width + 1)} -2px 2px 2px shade($black, 80),
+        ($bar-width - 1) 0 4px tint($black, 20), ($bar-width - 1) 1px 1px 2px tint($black, 30),
+        ($bar-width - 1) -2px 2px 2px shade($black, 80);
+
+      .logo {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: calc(var(--padding) / 2 * -1);
+        margin-left: 0;
+        width: 100%;
+        height: 28px;
+        background-image: url(images/logo.svg);
+        background-position: left;
+        background-repeat: no-repeat;
+        background-size: contain;
+        z-index: 2;
+        filter: drop-shadow(0 0.5px 0.5px shade($blue, 50)) drop-shadow(0 -0.5px 0.5px tint($blue, 90));
+        mix-blend-mode: color-burn;
+      }
+      .d-pad-wrapper {
+        position: absolute;
+        top: 84px;
+        @media all and (max-height: 640px) {
+          top: 72px;
+        }
+        left: -6px;
+        border-radius: 50%;
+        z-index: 2;
+        width: $dpad-size;
+        height: $dpad-size;
+        .up-button,
+        .right-button,
+        .down-button,
+        .left-button {
+          position: absolute;
+          width: $bar-width;
+          height: ($dpad-size / 2);
+          transform-origin: bottom;
+          bottom: 50%;
+          left: 50%;
+          z-index: -1;
+          &:before {
+            position: absolute;
+            width: 100%;
+            display: block;
+            font-size: 8px;
+            line-height: 1;
+            color: $lightgray;
+            text-align: center;
+            bottom: calc(100% + #{$arrow-offset});
+          }
+          &:active ~ .d-pad {
+            .d-pad-shadow {
+              &:before,
+              &:after {
+                box-shadow: $button-shadow-pressed, $shell-gap;
+              }
+            }
+          }
+        }
+        .up-button {
+          transform: translateX(-50%);
+          text-shadow: 0 1px 1px shade($lightgray, 20), 0 -1px 1px tint($lightgray, 50);
+        }
+        .right-button {
+          transform: translateX(-50%) rotate(90deg);
+          text-shadow: 1px 0 1px shade($lightgray, 20), -1px 0 1px tint($lightgray, 50);
+        }
+        .down-button {
+          transform: translateX(-50%) rotate(180deg);
+          text-shadow: 0 -1px 1px shade($lightgray, 20), 0 1px 1px tint($lightgray, 50);
+        }
+        .left-button {
+          transform: translateX(-50%) rotate(270deg);
+          text-shadow: -1px 0 1px shade($lightgray, 20), 1px 0 1px tint($lightgray, 50);
+        }
+        &:before {
+          display: block;
+          content: '';
+          width: calc(100% + #{($circle-padding * 2)});
+          height: calc(100% + #{($circle-padding * 2)});
+          position: absolute;
+          top: -#{$circle-padding};
+          left: -#{$circle-padding};
+          border-radius: 50%;
+          box-shadow: $shell-inset;
+          filter: blur(1px);
+          background-color: rgba(shade($lightgray, 10), 0.33);
+          z-index: -1;
+          mix-blend-mode: color-burn;
+        }
+        .d-pad-center {
+          width: ($bar-width);
+          height: ($bar-width);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: $black;
+          background-image: linear-gradient(
+            to bottom,
+            shade($black, 10) -#{round(($dpad-size / 2) - ($bar-width / 2))},
+            $black round(($bar-width) / 2),
+            tint($black, 10) #{round(($dpad-size / 2) + ($bar-width / 2))}
+          );
+          overflow: hidden;
+          background-size: $dpad-size;
+          &:before,
+          &:after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: -100%;
+            left: 0;
+            box-shadow: $dpad-shadow-fix-top-raised;
+            transition: all $transition;
+          }
+          &:after {
+            top: 100%;
+            box-shadow: $dpad-shadow-fix-bottom-raised;
+          }
+          .d-pad-indent {
+            display: block;
+            width: 66.666666666%;
+            height: 66.666666666%;
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background-color: shade($black, 10);
+            box-shadow: inset 0 6px 12px shade($black, 40), inset 0 -2px 2px tint($black, 30);
+            filter: blur(1px);
+            transition: all $transition;
+          }
+        }
+        .d-pad {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          z-index: -1;
+          pointer-events: none;
+        }
+        .d-pad-shadow,
+        .d-pad-3d {
+          &:before,
+          &:after {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            content: '';
+            display: block;
+            border-radius: 4px;
+            background-color: $black;
+          }
+          &:before {
+            height: $bar-width;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+          &:after {
+            width: $bar-width;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+        }
+        .d-pad-shadow {
+          &:before,
+          &:after {
+            transition: all $transition;
+            background-color: transparent;
+            box-shadow: $button-shadow-raised, $shell-gap;
+          }
+        }
+        .d-pad-3d {
+          &:before,
+          &:after {
+            transition: all $transition;
+            box-shadow: $dpad-shadow-inset-raised;
+            background-image: linear-gradient(
+              to bottom,
+              shade($black, 10) 0,
+              $black #{($dpad-size / 2)},
+              tint($black, 10) #{$dpad-size}
+            );
+            background-size: $dpad-size;
+          }
+          &:before {
+            background-image: linear-gradient(
+              to bottom,
+              shade($black, 10) -#{round(($dpad-size / 2) - ($bar-width / 2))},
+              $black round(($bar-width) / 2),
+              tint($black, 10) #{round(($dpad-size / 2) + ($bar-width / 2))}
+            );
+          }
+        }
+        // .up-button,
+        // .right-button,
+        // .down-button,
+        // .left-button {
+        //   &:active ~ .d-pad {
+        //     .d-pad-shadow {
+        //       &:before,
+        //       &:after {
+        //         box-shadow: $button-shadow-pressed, $shell-gap;
+        //       }
+        //     }
+        //     .d-pad-3d {
+        //       &:before,
+        //       &:after {
+        //         box-shadow: $dpad-shadow-inset-pressed-lr;
+        //       }
+        //     }
+        //   }
+        // }
+        .up-button {
+          &:active ~ .d-pad {
+            .d-pad-shadow {
+              &:before,
+              &:after {
+                box-shadow: $button-shadow-extra, $shell-gap;
+              }
+            }
+            .d-pad-3d {
+              &:before,
+              &:after {
+                box-shadow: $dpad-shadow-inset-pressed-u;
+              }
+            }
+            .d-pad-center {
+              &:before {
+                box-shadow: $dpad-shadow-fix-top-pressed-u;
+              }
+              &:after {
+                box-shadow: $dpad-shadow-fix-bottom-pressed-u;
+              }
+              .d-pad-indent {
+                margin-top: -2px;
+              }
+            }
+          }
+        }
+        .right-button {
+          &:active ~ .d-pad {
+            .d-pad-shadow {
+              &:before,
+              &:after {
+                box-shadow: $button-shadow-semi, $shell-gap;
+              }
+            }
+            .d-pad-3d {
+              &:before,
+              &:after {
+                box-shadow: $dpad-shadow-inset-pressed-r;
+              }
+            }
+            .d-pad-center {
+              &:before {
+                box-shadow: $dpad-shadow-fix-top-pressed-r;
+              }
+              &:after {
+                box-shadow: $dpad-shadow-fix-bottom-pressed-r;
+              }
+              .d-pad-indent {
+                margin-top: -1px;
+                margin-left: 1px;
+              }
+            }
+          }
+        }
+        .down-button {
+          &:active ~ .d-pad {
+            .d-pad-shadow {
+              &:before,
+              &:after {
+                box-shadow: $button-shadow-pressed, $shell-gap;
+              }
+            }
+            .d-pad-3d {
+              &:before,
+              &:after {
+                box-shadow: $dpad-shadow-inset-pressed-d;
+              }
+            }
+            .d-pad-center {
+              &:before {
+                box-shadow: $dpad-shadow-fix-top-pressed-d;
+              }
+              &:after {
+                box-shadow: $dpad-shadow-fix-bottom-pressed-d;
+              }
+              .d-pad-indent {
+                margin-top: 1px;
+              }
+            }
+          }
+        }
+        .left-button {
+          &:active ~ .d-pad {
+            .d-pad-shadow {
+              &:before,
+              &:after {
+                box-shadow: $button-shadow-semi, $shell-gap;
+              }
+            }
+            .d-pad-3d {
+              &:before,
+              &:after {
+                box-shadow: $dpad-shadow-inset-pressed-l;
+              }
+            }
+            .d-pad-center {
+              &:before {
+                box-shadow: $dpad-shadow-fix-top-pressed-l;
+              }
+              &:after {
+                box-shadow: $dpad-shadow-fix-bottom-pressed-l;
+              }
+              .d-pad-indent {
+                margin-top: -1px;
+                margin-left: -1px;
+              }
+            }
+          }
+        }
+      }
+      .a-and-b-wrapper {
+        $pill-padding: 10px;
+        $button-size: 62px;
+        $button-padding: 14px;
+        position: absolute;
+        top: 64px;
+        @media all and (max-height: 640px) {
+          top: 52px;
+        }
+        right: 0;
+        border-radius: 50%;
+        transform-origin: top right;
+        transform: rotate(-#{$angle});
+        z-index: 2;
+        &:before {
+          display: block;
+          content: '';
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          border-radius: ($button-padding + ($pill-padding * 3));
+          box-shadow: $shell-inset;
+          filter: blur(1px);
+          background-color: rgba(shade($lightgray, 10), 0.33);
+          z-index: -1;
+          mix-blend-mode: color-burn;
+        }
+        .a-button,
+        .b-button {
+          display: block;
+          transition: all $transition;
+          float: right;
+          margin: 10px;
+          background-clip: padding-box;
+          z-index: 2;
+          color: shade($plum, 10);
+          &:active {
+            &:before {
+              box-shadow: inset 0 -4px 4px -4px shade($plum, 60), inset 0 8px 8px -8px tint($plum, 80),
+                inset 0 10px 20px tint($plum, 30), inset 0 -10px 20px shade($plum, 50), 0 0 10px rgba($plum, 0.2),
+                inset 0 2px 0 2px rgba(0, 0, 0, 0.3), $button-shadow-pressed, $shell-gap;
+            }
+          }
+          &:before {
+            transition: all $transition;
+            background-color: $plum;
+            background-image: radial-gradient($plum, tint($plum, 30));
+            border-radius: 50%;
+            padding: $button-padding;
+            display: block;
+            font-size: ($button-size - ($button-padding * 2));
+            line-height: 1;
+            width: 100%;
+            height: 100%;
+            text-shadow: 0 1px 1px tint($plum, 30), 0 -1px 1px shade($plum, 67);
+            box-shadow: inset 0 -4px 4px -4px shade($plum, 50), inset 0 8px 8px -8px tint($plum, 90),
+              inset 0 10px 20px tint($plum, 30), inset 0 -10px 20px shade($plum, 50), 0 0 10px rgba($plum, 0.2),
+              inset 0 6px 0 2px rgba(255, 255, 255, 0.15), $button-shadow-raised, $shell-gap;
+            transform: rotate($angle);
+          }
+        }
+      }
+      // .start-and-select-wrapper {
+      //   position: absolute;
+      //   bottom: 0;
+      //   left: 50%;
+      //   transform: translateX(-50%);
+      //   transition: all $transition;
+      //   opacity: 0;
+      //   pointer-events: none;
+      //   z-index: 4;
+      //   .start-button,
+      //   .select-button {
+      //     float: right;
+      //     margin: 20px;
+      //     &:before {
+      //       color: $white;
+      //       font-size: 32px;
+      //     }
+      //   }
+      // }
+      .meta-wrapper {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: -20px;
+        a {
+          text-decoration: none;
+          font-size: 12px;
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          display: inline-block;
+          line-height: 24px;
+          padding: 0 12px;
+          border-radius: 12px;
+          background-color: shade($lightgray, 2);
+          color: $lightgray;
+          box-shadow: $shell-relief-down;
+          text-shadow: $shell-relief-up;
+        }
+      }
+    }
+    .fps-counter {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 10px;
+      font-size: 8px;
+      font-weight: bold;
+    }
+    &.preview {
+      &:after {
+        opacity: 1;
+      }
+      .screen-wrapper {
+        .preview-wrapper {
+          pointer-events: all;
+          opacity: 1;
+          transform: scale(1.05);
+          &:not(.frame-disabled) {
+            &:after {
+              box-shadow: 0 0 0 10px #000, 0 2px 4px 10px rgba(0, 0, 0, 0.4);
+            }
+          }
+        }
+      }
+      .controls-wrapper {
+        .start-and-select-wrapper {
+          opacity: 1;
+          pointer-events: all;
+        }
+      }
+    }
+    &.rgb {
+      .controls-wrapper {
+        .logo {
+          background-image: url(images/logo_rgb.svg);
+        }
+      }
+    }
+  }
+  .error-page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: $darkgray;
+    .error-message {
+      color: $white;
+      position: absolute;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .error-icon {
+        font-size: 72px;
+      }
+      .error-text {
+        font-weight: bold;
+        margin-top: 20px;
+      }
+    }
+  }
+}

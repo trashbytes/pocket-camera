@@ -1,0 +1,115 @@
+
+@import 'variables';
+@import 'font';
+@import 'functions';
+
+@mixin mdi-content($icon: '', $size: false, $proportional: false) {
+  font-family: 'MaterialDesignIcons', 'Material Design Icons', monospace;
+  font-weight: normal;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+  overflow: hidden;
+  text-align: center;
+  color: inherit;
+  vertical-align: middle;
+  @if ($size != false) {
+    font-size: $size;
+    @if ($proportional == false) {
+      width: $size;
+    }
+    height: $size;
+    line-height: $size;
+  }
+  else {
+    font-size: inherit;
+    line-height: inherit;
+  }
+  display: inline-block;
+  transition: opacity 0.2s ease-in-out;
+  @if ($icon != '') {
+    content: mdi($icon);
+  }
+}
+
+.#{$mdi-css-prefix}:before,
+.#{$mdi-css-prefix}-set {
+  @include mdi-content('');
+}
+
+@mixin mdi($icon: '', $size: false, $proportional: false) {
+  &:before {
+    @include mdi-content($icon, $size);
+  }
+}
+
+$all-icons: false;
+
+@if variable-exists(additional-icons) {
+  @if ($additional-icons == 'all') {
+    $all-icons: true;
+    @each $key, $value in $mdi-icons {
+      .#{$mdi-css-prefix}-#{$key}::before {
+        content: char($value);
+      }
+    }
+  } @else {
+    @each $key in $additional-icons {
+      .#{$mdi-css-prefix}-#{$key}::before {
+        content: char(map-get($mdi-icons, $key));
+      }
+    }
+  }
+}
+
+@if ($all-icons == false) {
+  @each $key in $default-icons {
+    .#{$mdi-css-prefix}-#{$key}::before {
+      content: char(map-get($mdi-icons, $key));
+    }
+  }
+  @each $key in $rtf-icons {
+    .#{$mdi-css-prefix}-#{$key}::before {
+      content: char(map-get($mdi-icons, $key));
+    }
+  }
+}
+
+.#{$mdi-css-prefix}-blank::before {
+  content: '\F68C';
+  visibility: hidden;
+}
+
+@mixin mdi-spin() {
+  &:before {
+    @-webkit-keyframes #{$mdi-css-prefix}-spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+      }
+    }
+    @keyframes #{$mdi-css-prefix}-spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+      }
+    }
+    -webkit-animation: #{$mdi-css-prefix}-spin 1s infinite linear;
+    animation: #{$mdi-css-prefix}-spin 1s infinite linear;
+  }
+}

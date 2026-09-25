@@ -1,0 +1,31 @@
+# ---- Editor / IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- Lokale Build-/Deploy-Skripte & Historie ----
+compile.bat
+\# compile.bat
+.history/
+
+# ---- Deploy-Configs mit Zugangsdaten (NIE committen) ----
+ftp-kr.json
+sftp.json
+ftp-kr.sync.cache.json
+*.key
+
+# ---- Build- / Cache-Artefakte ----
+.sass-cache/
+*.log
+
+# ---- Node ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---- Betriebssystem ----
+.DS_Store
+Thumbs.db
+Desktop.ini

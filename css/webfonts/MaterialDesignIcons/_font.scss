@@ -1,0 +1,12 @@
+@import 'variables';
+
+@font-face {
+  font-family: 'MaterialDesignIcons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('css/webfonts/MaterialDesignIcons/font.eot?v=#{$mdi-version}'); /* IE9 Compat Modes */
+  src: url('css/webfonts/MaterialDesignIcons/font.eot?#iefix&v=#{$mdi-version}') format('embedded-opentype'),
+    /* IE6-IE8 */ url('css/webfonts/MaterialDesignIcons/font.woff2?v=#{$mdi-version}') format('woff2'),
+    /* Super Modern Browsers */ url('css/webfonts/MaterialDesignIcons/font.woff?v=#{$mdi-version}') format('woff'),
+    /* Modern Browsers */ url('css/webfonts/MaterialDesignIcons/font.ttf?v=#{$mdi-version}') format('truetype'); /* Safari, Android, iOS */
+}
