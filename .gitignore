@@ -4,18 +4,18 @@
 *.swp
 *.swo
 
-# ---- Lokale Build-/Deploy-Skripte & Historie ----
+# ---- Local build/deploy scripts & history ----
 compile.bat
 \# compile.bat
 .history/
 
-# ---- Deploy-Configs mit Zugangsdaten (NIE committen) ----
+# ---- Deploy configs containing credentials (never commit) ----
 ftp-kr.json
 sftp.json
 ftp-kr.sync.cache.json
 *.key
 
-# ---- Build- / Cache-Artefakte ----
+# ---- Build / cache artifacts ----
 .sass-cache/
 *.log
 
@@ -25,10 +25,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# ---- Betriebssystem ----
+# ---- OS ----
 .DS_Store
 Thumbs.db
 Desktop.ini
 
-# ---- Tooling-Artefakte ----
+# ---- Tooling artifacts ----
 .playwright-mcp/
+
+# ---- Local agent instructions ----
+AGENTS.md
