@@ -18,7 +18,7 @@ A Game Boy Camera–inspired **Progressive Web App** that turns your phone or we
 - 📴 Fully offline-capable via a service worker — installable as a PWA
 - 🔒 No uploads, no server: all processing happens on-device
 
-![Screenshot of Pocket Camera](docs/images/screenshot.jpg)
+<img src="docs/images/screenshot.jpg" alt="Screenshot of Pocket Camera" width="360">
 
 *Screenshot of Pocket Camera. It's obviously "heavily inspired" by the original Game Boy.*
 
